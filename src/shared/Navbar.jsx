@@ -1,0 +1,99 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FaBars, FaTimes } from "react-icons/fa";
+
+const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navItems = [
+    { name: "Home", path: "/" },
+    { name: "Products", path: "/product" },
+    { name: "About Us", path: "/about" },
+    { name: "Testimonial", path: "/testimonial" },
+    { name: "Contact Us", path: "/contact" },
+  ];
+
+  return (
+    <nav className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-2xl sticky top-0 z-50 border-b border-amber-500/20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20 py-2">
+          {/* Logo */}
+          <Link to="/" className="flex items-center group">
+            <img
+              src="/src/assets/navbarLogo/logo.png"
+              alt="Logo"
+              className="h-24 w-auto object-contain transition-transform duration-300 group-hover:scale-110"
+            />
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                to={item.path}
+                className="text-gray-200 hover:text-amber-400 font-semibold text-lg px-5 py-2 rounded-lg transition-all duration-300 relative group"
+              >
+                {item.name}
+                <span className="absolute bottom-1 left-5 w-0 h-0.5 bg-gradient-to-r from-amber-400 to-amber-600 transition-all duration-300 group-hover:w-[calc(100%-2.5rem)] rounded-full"></span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Login Button */}
+          <div className="hidden md:flex items-center">
+            <Link
+              to="/login"
+              className="text-amber-400 hover:text-amber-300 font-bold text-lg px-6 py-2.5 rounded-lg border-2 border-amber-400 hover:border-amber-300 transition-all duration-300 transform hover:scale-105"
+            >
+              Login
+            </Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden text-gray-200 hover:text-amber-400 focus:outline-none transition-colors duration-300"
+          >
+            {isMenuOpen ? (
+              <FaTimes className="h-6 w-6" />
+            ) : (
+              <FaBars className="h-6 w-6" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <div
+        className={`md:hidden transition-all duration-300 ease-in-out ${
+          isMenuOpen
+            ? "max-h-96 opacity-100"
+            : "max-h-0 opacity-0 overflow-hidden"
+        }`}
+      >
+        <div className="px-4 pt-2 pb-4 space-y-2 bg-slate-800/95 backdrop-blur-lg border-t border-amber-500/20">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              onClick={() => setIsMenuOpen(false)}
+              className="block px-5 py-3 text-gray-200 hover:bg-amber-500/10 hover:text-amber-400 rounded-lg transition-all duration-200 font-semibold text-base"
+            >
+              {item.name}
+            </Link>
+          ))}
+          <Link
+            to="/login"
+            onClick={() => setIsMenuOpen(false)}
+            className="flex items-center justify-center text-amber-400 hover:text-amber-300 font-bold text-base px-6 py-3 rounded-lg border-2 border-amber-400 hover:border-amber-300 transition-all duration-200 mt-4"
+          >
+            Login
+          </Link>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;

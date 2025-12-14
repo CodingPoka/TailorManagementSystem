@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hero Slider Animations */
+@layer utilities {
+  /* Slide In Left */
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slideInLeft {
+    animation: slideInLeft 0.8s ease-out forwards;
+  }
+
+  /* Slide In Right */
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slideInRight {
+    animation: slideInRight 0.8s ease-out forwards;
+  }
+
+  /* Fade In Up */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  /* Fade In Down */
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeInDown {
+    animation: fadeInDown 0.8s ease-out forwards;
+  }
+
+  /* Bounce In */
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .animate-bounceIn {
+    animation: bounceIn 1s ease-out forwards;
+  }
+
+  /* Zoom In */
+  @keyframes zoomIn {
+    from {
+      transform: scale(1.1);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  .animate-zoomIn {
+    animation: zoomIn 8s ease-out forwards;
+  }
+
+  /* Scale In */
+  @keyframes scaleIn {
+    from {
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-scaleIn {
+    animation: scaleIn 8s ease-out forwards;
+  }
+
+  /* Pan Zoom */
+  @keyframes panZoom {
+    0% {
+      transform: scale(1) translateX(0);
+    }
+    50% {
+      transform: scale(1.1) translateX(-20px);
+    }
+    100% {
+      transform: scale(1) translateX(0);
+    }
+  }
+
+  .animate-panZoom {
+    animation: panZoom 8s ease-in-out infinite;
+  }
+}
