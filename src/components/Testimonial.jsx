@@ -107,7 +107,7 @@ const Testimonial = () => {
       <section className="relative h-[50vh] md:h-[60vh] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url(/src/assets/testiImage/testi.webp)" }}
+          style={{ backgroundImage: "url(/assets/testiImage/testi.webp)" }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/80 to-slate-900/70"></div>
         </div>

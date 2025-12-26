@@ -8,7 +8,7 @@ const Home = () => {
   const slides = [
     {
       id: 1,
-      image: "/src/assets/homeImage/slide1.jpg",
+      image: "/assets/homeImage/slide1.jpg",
       title: "Welcome to DorjiHub",
       subtitle:
         "Your complete solution for managing tailors, customers, and orders in one place.",
@@ -18,7 +18,7 @@ const Home = () => {
     },
     {
       id: 2,
-      image: "/src/assets/homeImage/slide2.jpg",
+      image: "/assets/homeImage/slide2.jpg",
       title: "Perfect Fit, Every Time",
       subtitle:
         "Book your tailor online, track your orders, and manage measurements seamlessly.",
@@ -28,7 +28,7 @@ const Home = () => {
     },
     {
       id: 3,
-      image: "/src/assets/homeImage/slide3.jpg",
+      image: "/assets/homeImage/slide3.jpg",
       title: "Your Personal Tailor Assistant",
       subtitle:
         "From measurements to delivery, DorjiHub keeps every detail organized for you.",
@@ -38,7 +38,7 @@ const Home = () => {
     },
     {
       id: 4,
-      image: "/src/assets/homeImage/slide4.jpg",
+      image: "/assets/homeImage/slide4.jpg",
       title: "Smart Tailoring Starts Here",
       subtitle:
         "Connect customers, tailors, and admins with a modern platform.",
@@ -214,7 +214,7 @@ const Home = () => {
             <div className="order-1 lg:order-2">
               <div className="relative overflow-hidden rounded-2xl shadow-2xl group h-[350px] md:h-[450px] xl:h-[550px] 2xl:h-[600px]">
                 <img
-                  src="/src/assets/homeImage/story1.jpg"
+                  src="/assets/homeImage/story1.jpg"
                   alt="Perfect Communication"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
@@ -233,7 +233,7 @@ const Home = () => {
             <div className="order-1">
               <div className="relative overflow-hidden rounded-2xl shadow-2xl group h-[350px] md:h-[450px] xl:h-[550px] 2xl:h-[600px]">
                 <img
-                  src="/src/assets/homeImage/story2.jpg"
+                  src="/assets/homeImage/story2.jpg"
                   alt="Tailoring Without Hassle"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />

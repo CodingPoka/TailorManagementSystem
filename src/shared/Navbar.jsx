@@ -66,7 +66,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center group">
             <img
-              src="/src/assets/navbarLogo/logo.png"
+              src="/assets/navbarLogo/logo.png"
               alt="Logo"
               className="h-24 w-auto object-contain transition-transform duration-300 group-hover:scale-110"
             />

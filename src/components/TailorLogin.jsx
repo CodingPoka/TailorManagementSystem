@@ -125,7 +125,7 @@ const TailorLogin = () => {
                 </Link>
                 <div className="flex justify-center mb-6">
                   <img
-                    src="/src/assets/navbarLogo/logo.png"
+                    src="/assets/navbarLogo/logo.png"
                     alt="DorjiHub Logo"
                     className="h-24 w-auto object-contain transform hover:scale-110 transition-transform duration-300"
                   />

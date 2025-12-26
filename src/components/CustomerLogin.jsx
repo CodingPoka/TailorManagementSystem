@@ -130,7 +130,7 @@ const CustomerLogin = () => {
                 </Link>
                 <div className="flex justify-center mb-6">
                   <img
-                    src="/src/assets/navbarLogo/logo.png"
+                    src="/assets/navbarLogo/logo.png"
                     alt="DorjiHub Logo"
                     className="h-24 w-auto object-contain transform hover:scale-110 transition-transform duration-300"
                   />
@@ -348,7 +348,7 @@ const CustomerLogin = () => {
                   <div className="absolute inset-0 bg-amber-400 blur-2xl opacity-30 rounded-full animate-pulse"></div>
                   <div className="relative bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-3xl shadow-2xl border border-amber-500/30">
                     <img
-                      src="/src/assets/navbarLogo/logo.png"
+                      src="/assets/navbarLogo/logo.png"
                       alt="DorjiHub"
                       className="h-32 w-auto object-contain"
                     />

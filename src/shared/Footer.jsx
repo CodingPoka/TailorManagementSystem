@@ -20,7 +20,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-4">
             <img
-              src="/src/assets/navbarLogo/logo.png"
+              src="/assets/navbarLogo/logo.png"
               alt="DorjiHub Logo"
               className="h-16 w-auto object-contain"
             />

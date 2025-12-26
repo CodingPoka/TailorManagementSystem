@@ -18,7 +18,7 @@ const About = () => {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url(/src/assets/aboutImage/aboutHero.jpg)",
+            backgroundImage: "url(/assets/aboutImage/aboutHero.jpg)",
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/80 to-slate-900/70"></div>
