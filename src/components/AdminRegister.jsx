@@ -3,32 +3,33 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   FaUser,
   FaEnvelope,
-  FaHome,
   FaLock,
-  FaPhone,
   FaEye,
   FaEyeSlash,
-  FaMapMarkerAlt,
+  FaShieldAlt,
+  FaHome,
 } from "react-icons/fa";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, db } from "../config/firebaseConfig";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { app } from "../config/firebaseConfig";
 import toast from "react-hot-toast";
 
-const CustomerRegister = () => {
+const AdminRegister = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    phone: "",
-    address: "",
     password: "",
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const auth = getAuth(app);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,20 +58,10 @@ const CustomerRegister = () => {
       newErrors.email = "Please enter a valid email";
     }
 
-    if (!formData.phone) {
-      newErrors.phone = "Phone number is required";
-    } else if (!/^\d{11}$/.test(formData.phone.replace(/[-\s]/g, ""))) {
-      newErrors.phone = "Please enter a valid 11-digit phone number";
-    }
-
-    if (!formData.address.trim()) {
-      newErrors.address = "Address is required";
-    }
-
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
     }
 
     if (!formData.confirmPassword) {
@@ -100,24 +91,14 @@ const CustomerRegister = () => {
           displayName: formData.fullName,
         });
 
-        // Save user data to Firestore
-        await setDoc(doc(db, "users", userCredential.user.uid), {
-          name: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          role: "customer",
-          createdAt: serverTimestamp(),
-        });
-
-        toast.success("Registration successful! Please login.", {
+        toast.success("Admin registration successful! Please login.", {
           duration: 3000,
           position: "top-center",
         });
 
         // Redirect to login page after successful registration
         setTimeout(() => {
-          navigate("/login");
+          navigate("/admin-login");
         }, 1500);
       } catch (error) {
         console.error("Registration error:", error);
@@ -146,33 +127,26 @@ const CustomerRegister = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-red-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-700"></div>
       </div>
 
       <div className="relative max-w-4xl w-full">
-        <div className="bg-slate-800/40 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-amber-500/20 p-8 sm:p-12">
+        <div className="bg-slate-800/40 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-red-500/20 p-8 sm:p-12">
           {/* Header */}
           <div className="text-center mb-8">
             <Link
               to="/"
-              className="inline-flex items-center text-gray-400 hover:text-amber-400 transition-colors duration-200 mb-4 text-sm group"
+              className="inline-flex items-center text-gray-400 hover:text-red-400 transition-colors duration-200 mb-4 text-sm group"
             >
               <FaHome className="mr-2 group-hover:scale-110 transition-transform duration-200" />
               Back to Home
             </Link>
-            <div className="flex justify-center mb-6">
-              <img
-                src="/src/assets/navbarLogo/logo.png"
-                alt="DorjiHub Logo"
-                className="h-20 w-auto object-contain transform hover:scale-110 transition-transform duration-300"
-              />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
-              Customer Registration
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+              Admin Registration
             </h2>
             <p className="text-gray-400 text-sm sm:text-base">
-              Join DorjiHub and get access to expert tailors
+              Create an admin account
             </p>
           </div>
 
@@ -200,8 +174,8 @@ const CustomerRegister = () => {
                     className={`w-full pl-12 pr-4 py-3 bg-slate-700/50 border ${
                       errors.fullName
                         ? "border-red-500"
-                        : "border-slate-600 focus:border-amber-500"
-                    } text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all duration-300 placeholder-gray-500`}
+                        : "border-slate-600 focus:border-red-500"
+                    } text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all duration-300 placeholder-gray-500`}
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -233,80 +207,14 @@ const CustomerRegister = () => {
                     className={`w-full pl-12 pr-4 py-3 bg-slate-700/50 border ${
                       errors.email
                         ? "border-red-500"
-                        : "border-slate-600 focus:border-amber-500"
-                    } text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all duration-300 placeholder-gray-500`}
+                        : "border-slate-600 focus:border-red-500"
+                    } text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all duration-300 placeholder-gray-500`}
                     placeholder="Enter your email"
                   />
                 </div>
                 {errors.email && (
                   <p className="text-red-400 text-sm mt-1 flex items-center">
                     <span className="mr-1">⚠</span> {errors.email}
-                  </p>
-                )}
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-semibold text-gray-300 mb-2"
-                >
-                  Phone Number
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <FaPhone className="text-gray-400" />
-                  </div>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className={`w-full pl-12 pr-4 py-3 bg-slate-700/50 border ${
-                      errors.phone
-                        ? "border-red-500"
-                        : "border-slate-600 focus:border-amber-500"
-                    } text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all duration-300 placeholder-gray-500`}
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-                {errors.phone && (
-                  <p className="text-red-400 text-sm mt-1 flex items-center">
-                    <span className="mr-1">⚠</span> {errors.phone}
-                  </p>
-                )}
-              </div>
-
-              {/* Address */}
-              <div>
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-semibold text-gray-300 mb-2"
-                >
-                  Address
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <FaMapMarkerAlt className="text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    className={`w-full pl-12 pr-4 py-3 bg-slate-700/50 border ${
-                      errors.address
-                        ? "border-red-500"
-                        : "border-slate-600 focus:border-amber-500"
-                    } text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all duration-300 placeholder-gray-500`}
-                    placeholder="Enter your address"
-                  />
-                </div>
-                {errors.address && (
-                  <p className="text-red-400 text-sm mt-1 flex items-center">
-                    <span className="mr-1">⚠</span> {errors.address}
                   </p>
                 )}
               </div>
@@ -332,14 +240,14 @@ const CustomerRegister = () => {
                     className={`w-full pl-12 pr-12 py-3 bg-slate-700/50 border ${
                       errors.password
                         ? "border-red-500"
-                        : "border-slate-600 focus:border-amber-500"
-                    } text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all duration-300 placeholder-gray-500`}
-                    placeholder="Create a password"
+                        : "border-slate-600 focus:border-red-500"
+                    } text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all duration-300 placeholder-gray-500`}
+                    placeholder="Create a password (min 8 characters)"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-amber-400 transition-colors duration-200"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-red-400 transition-colors duration-200"
                   >
                     {showPassword ? (
                       <FaEyeSlash className="text-xl" />
@@ -376,14 +284,14 @@ const CustomerRegister = () => {
                     className={`w-full pl-12 pr-12 py-3 bg-slate-700/50 border ${
                       errors.confirmPassword
                         ? "border-red-500"
-                        : "border-slate-600 focus:border-amber-500"
-                    } text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all duration-300 placeholder-gray-500`}
+                        : "border-slate-600 focus:border-red-500"
+                    } text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all duration-300 placeholder-gray-500`}
                     placeholder="Confirm your password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-amber-400 transition-colors duration-200"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-red-400 transition-colors duration-200"
                   >
                     {showConfirmPassword ? (
                       <FaEyeSlash className="text-xl" />
@@ -405,24 +313,25 @@ const CustomerRegister = () => {
               <input
                 type="checkbox"
                 id="terms"
-                className="w-4 h-4 mt-1 rounded border-slate-600 bg-slate-700 text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-800 cursor-pointer"
+                className="w-4 h-4 mt-1 rounded border-slate-600 bg-slate-700 text-red-500 focus:ring-red-500 focus:ring-offset-slate-800 cursor-pointer"
                 required
               />
               <label htmlFor="terms" className="ml-3 text-sm text-gray-400">
                 I agree to the{" "}
                 <Link
                   to="/terms"
-                  className="text-amber-400 hover:text-amber-300 transition-colors duration-200"
+                  className="text-red-400 hover:text-red-300 transition-colors duration-200"
                 >
                   Terms and Conditions
                 </Link>{" "}
                 and{" "}
                 <Link
                   to="/privacy"
-                  className="text-amber-400 hover:text-amber-300 transition-colors duration-200"
+                  className="text-red-400 hover:text-red-300 transition-colors duration-200"
                 >
                   Privacy Policy
                 </Link>
+                , and understand the responsibilities of an admin account.
               </label>
             </div>
 
@@ -430,18 +339,18 @@ const CustomerRegister = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-3.5 rounded-xl hover:from-amber-600 hover:to-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-slate-800 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-amber-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white font-bold py-3.5 rounded-xl hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-slate-800 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              {isLoading ? "Creating Account..." : "Create Account"}
+              {isLoading ? "Creating Account..." : "Create Admin Account"}
             </button>
 
             {/* Login Link */}
             <div className="text-center mt-6">
               <p className="text-gray-400 text-sm">
-                Already have an account?{" "}
+                Already have an admin account?{" "}
                 <Link
-                  to="/customer-login"
-                  className="text-amber-400 hover:text-amber-300 font-semibold transition-colors duration-200"
+                  to="/admin-login"
+                  className="text-red-400 hover:text-red-300 font-semibold transition-colors duration-200"
                 >
                   Sign In
                 </Link>
@@ -452,11 +361,11 @@ const CustomerRegister = () => {
 
         {/* Footer */}
         <div className="text-center mt-8 text-gray-500 text-sm">
-          <p>© 2024 DorjiHub. All rights reserved.</p>
+          <p>© 2024 DorjiHub. All rights reserved. | Admin Portal</p>
         </div>
       </div>
     </div>
   );
 };
 
-export default CustomerRegister;
+export default AdminRegister;
