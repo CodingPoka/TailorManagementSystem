@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../config/firebaseConfig";
-import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { onAuthStateChanged } from "firebase/auth";
@@ -22,43 +28,50 @@ const CustomerDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    let unsubscribeOrders = null;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
-        fetchOrders(user);
+        // Set up real-time listener for orders
+        const ordersRef = collection(db, "orders");
+        const q = query(ordersRef, where("userId", "==", user.uid));
+
+        unsubscribeOrders = onSnapshot(
+          q,
+          (querySnapshot) => {
+            const ordersData = querySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+
+            // Sort by createdAt in descending order (newest first)
+            ordersData.sort((a, b) => {
+              if (!a.createdAt || !b.createdAt) return 0;
+              return b.createdAt.seconds - a.createdAt.seconds;
+            });
+
+            setOrders(ordersData);
+            setLoading(false);
+          },
+          (error) => {
+            console.error("Error fetching orders:", error);
+            toast.error("Failed to load orders");
+            setLoading(false);
+          }
+        );
       } else {
         toast.error("Please login to view orders");
         navigate("/login");
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeOrders) {
+        unsubscribeOrders();
+      }
+    };
   }, [navigate]);
-
-  const fetchOrders = async (user) => {
-    try {
-      const ordersRef = collection(db, "orders");
-      const q = query(ordersRef, where("userId", "==", user.uid));
-
-      const querySnapshot = await getDocs(q);
-      const ordersData = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      // Sort by createdAt in descending order (newest first)
-      ordersData.sort((a, b) => {
-        if (!a.createdAt || !b.createdAt) return 0;
-        return b.createdAt.seconds - a.createdAt.seconds;
-      });
-
-      setOrders(ordersData);
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-      toast.error("Failed to load orders");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getStatusBadge = (status) => {
     const statusLower = status?.toLowerCase() || "pending";
@@ -88,22 +101,21 @@ const CustomerDashboard = () => {
 
   const filteredOrders = orders.filter((order) => {
     if (selectedStatus === "all") return true;
-    return order.orderStatus?.toLowerCase() === selectedStatus;
+    return order.status?.toLowerCase() === selectedStatus;
   });
 
   const stats = {
     total: orders.length,
-    pending: orders.filter((o) => o.orderStatus?.toLowerCase() === "pending")
-      .length,
+    pending: orders.filter((o) => o.status?.toLowerCase() === "pending").length,
     processing: orders.filter(
       (o) =>
-        o.orderStatus?.toLowerCase() === "approved" ||
-        o.orderStatus?.toLowerCase() === "processing"
+        o.status?.toLowerCase() === "approved" ||
+        o.status?.toLowerCase() === "processing"
     ).length,
     completed: orders.filter(
       (o) =>
-        o.orderStatus?.toLowerCase() === "completed" ||
-        o.orderStatus?.toLowerCase() === "delivered"
+        o.status?.toLowerCase() === "completed" ||
+        o.status?.toLowerCase() === "delivered"
     ).length,
   };
 
@@ -259,11 +271,11 @@ const CustomerDashboard = () => {
                     </div>
                     <span
                       className={`px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 ${getStatusBadge(
-                        order.orderStatus
+                        order.status
                       )}`}
                     >
-                      {getStatusIcon(order.orderStatus)}
-                      {order.orderStatus || "Pending"}
+                      {getStatusIcon(order.status)}
+                      {order.status || "Pending"}
                     </span>
                   </div>
 

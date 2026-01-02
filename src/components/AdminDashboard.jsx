@@ -126,7 +126,7 @@ const AdminDashboard = () => {
 
         // Calculate revenue (only completed orders)
         if (status === "completed" || status === "delivered") {
-          totalRevenue += parseFloat(data.totalPrice || 0);
+          totalRevenue += parseFloat(data.totalAmount || 0);
         }
       });
 
