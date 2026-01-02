@@ -316,7 +316,7 @@ const TailorLogin = () => {
                   <p className="text-gray-500 text-xs">Login as:</p>
                   <div className="flex justify-center gap-4 text-sm">
                     <Link
-                      to="/login"
+                      to="/customer-login"
                       className="text-gray-400 hover:text-amber-400 transition-colors duration-200"
                     >
                       Customer

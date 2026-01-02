@@ -3,6 +3,7 @@ import { auth, db } from "../config/firebaseConfig";
 import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   FaShoppingBag,
   FaClock,
@@ -21,18 +22,20 @@ const CustomerDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
-    try {
-      const user = auth.currentUser;
-      if (!user) {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        fetchOrders(user);
+      } else {
         toast.error("Please login to view orders");
         navigate("/login");
-        return;
       }
+    });
 
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const fetchOrders = async (user) => {
+    try {
       const ordersRef = collection(db, "orders");
       const q = query(ordersRef, where("userId", "==", user.uid));
 
