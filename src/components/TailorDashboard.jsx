@@ -100,7 +100,7 @@ const TailorDashboard = () => {
           completedCount++;
         else if (status === "cancelled") cancelledCount++;
 
-        const price = parseFloat(data.totalPrice || 0);
+        const price = parseFloat(data.totalAmount || 0);
         if (status === "completed" || status === "delivered") {
           totalEarnings += price;
           if (orderDate >= startOfMonth) {
