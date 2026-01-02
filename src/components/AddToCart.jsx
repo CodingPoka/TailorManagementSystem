@@ -78,7 +78,7 @@ const AddToCart = () => {
     const user = auth.currentUser;
     if (!user) {
       toast.error("Please login to continue");
-      navigate("/login", { state: { from: "/cart" } });
+      navigate("/customer-login", { state: { from: "/cart" } });
       return;
     }
 
